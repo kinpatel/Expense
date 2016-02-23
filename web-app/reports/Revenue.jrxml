@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Revenue" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="79cf874c-962a-4fb8-896e-a13943344976">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="11"/>
+	<parameter name="Month" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Year" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="User" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     hotel.`name` AS hotel_name,
+     daily_revenue.`day` AS daily_revenue_day,
+     daily_revenue.`taxabletotal` AS daily_revenue_taxabletotal,
+     daily_revenue.`countycitytax` AS daily_revenue_countycitytax,
+     daily_revenue.`statetax` AS daily_revenue_statetax,
+     daily_revenue.`taxexempt` AS daily_revenue_taxexempt,
+     daily_revenue.`total` AS daily_revenue_total,
+     revenue_detail.`total` AS revenue_detail_total,
+     daily_revenue.`cashcheck` AS daily_revenue_cashcheck,
+     daily_revenue.`amex` AS daily_revenue_amex,
+     daily_revenue.`discovery` AS daily_revenue_discovery,
+     daily_revenue.`mastercard` AS daily_revenue_mastercard,
+     daily_revenue.`visa` AS daily_revenue_visa,
+     revenue_detail.`description` AS revenue_detail_description,
+     revenue_type.`name` AS revenue_type_name
+FROM
+     `hotel` hotel INNER JOIN `shiro_user_hotels` shiro_user_hotels ON hotel.`id` = shiro_user_hotels.`hotel_id`
+     INNER JOIN `shiro_user` shiro_user ON shiro_user_hotels.`shiro_user_id` = shiro_user.`id`
+     INNER JOIN `daily_revenue` daily_revenue ON shiro_user.`id` = daily_revenue.`enteruser_id`
+     AND hotel.`id` = daily_revenue.`hotel_id`
+     INNER JOIN `revenue_detail` revenue_detail ON daily_revenue.`id` = revenue_detail.`dailyrevenue_id`
+     INNER JOIN `revenue_type` revenue_type ON revenue_detail.`revenuetype_id` = revenue_type.`id`
+     AND hotel.`id` = revenue_type.`hotel_id`
+WHERE
+     MONTH(daily_revenue.day) = $P{Month}
+ AND YEAR(daily_revenue.day) = $P{Year}
+ AND shiro_user.username = $P{User}
+ORDER BY
+     hotel.`name` ASC]]>
+	</queryString>
+	<field name="hotel_name" class="java.lang.String"/>
+	<field name="daily_revenue_day" class="java.sql.Timestamp"/>
+	<field name="daily_revenue_taxabletotal" class="java.lang.Double"/>
+	<field name="daily_revenue_countycitytax" class="java.lang.Double"/>
+	<field name="daily_revenue_statetax" class="java.lang.Double"/>
+	<field name="daily_revenue_taxexempt" class="java.lang.Double"/>
+	<field name="daily_revenue_total" class="java.lang.Double"/>
+	<field name="revenue_detail_total" class="java.lang.Double"/>
+	<field name="daily_revenue_cashcheck" class="java.lang.Double"/>
+	<field name="daily_revenue_amex" class="java.lang.Double"/>
+	<field name="daily_revenue_discovery" class="java.lang.Double"/>
+	<field name="daily_revenue_mastercard" class="java.lang.Double"/>
+	<field name="daily_revenue_visa" class="java.lang.Double"/>
+	<field name="revenue_detail_description" class="java.lang.String"/>
+	<field name="revenue_type_name" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="336" y="23" width="135" height="28" uuid="bac1f9b5-a3c3-483e-ba6b-9173b49e05da"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[Revenue Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="26" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="42" height="20" uuid="4ea18163-a44c-4bfb-8584-b7223c7baa8b"/>
+				<text><![CDATA[Day	]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="117" y="0" width="45" height="20" uuid="dab97372-0ab3-4858-a8ff-37310544581d"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Taxable]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="162" y="0" width="76" height="20" uuid="a436b6be-98b6-4cef-ae2a-c63dda39aec0"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[City/County Tax]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="238" y="0" width="55" height="20" uuid="8f6c6a2e-c45b-404c-8faa-8162d96244fc"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[State Tax]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="0" width="61" height="20" uuid="c4921c2a-9ad3-4f27-92d7-a439d22e73e0"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[TaxExempt Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="406" y="0" width="57" height="20" uuid="559b8a02-7e36-46c7-b2bf-4dd6d335611d"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Daily Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="354" y="0" width="52" height="20" uuid="763fbe0c-d56d-4226-805a-7755deda3cc1"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Cash/Chk]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="21" width="801" height="1" uuid="9444bf6c-28a6-4ae2-8ef9-8314018cef76"/>
+			</line>
+			<staticText>
+				<reportElement x="659" y="0" width="67" height="20" uuid="132d9ef3-5a75-4156-9350-2daad3804061"/>
+				<text><![CDATA[RevenueType]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="463" y="0" width="55" height="20" uuid="f4f3da85-36c0-4e00-8fcc-9c44bc18a475"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[AMEX]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="518" y="0" width="46" height="20" uuid="1b297bff-5669-4625-8ec8-dad0c7a55c13"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Discovery]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="564" y="0" width="53" height="20" uuid="8378735b-2f82-48b8-892e-8e35c1e1f3fa"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Mastercard]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="617" y="0" width="42" height="20" uuid="0e38759c-88b7-4921-9b94-ddde7051b542"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[VISA ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="726" y="0" width="76" height="20" uuid="0a976aa8-c2a7-4103-ae4a-32dbc7614c4d"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Revenue Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="43" y="0" width="75" height="20" uuid="a66ec75e-6c14-460d-a31a-696393dba806"/>
+				<text><![CDATA[Hotel]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="29" splitType="Stretch">
+			<textField>
+				<reportElement x="1" y="4" width="42" height="20" uuid="8ef1c054-a925-41e2-b785-7eeae6c9365e"/>
+				<textFieldExpression><![CDATA[$F{daily_revenue_day}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="27" width="802" height="1" uuid="33fb15d4-9fcf-430f-8610-22b57856f056"/>
+			</line>
+			<textField>
+				<reportElement x="564" y="4" width="53" height="23" uuid="6ffa0ab2-f073-4362-b403-db318388c317"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{daily_revenue_mastercard}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="162" y="4" width="76" height="20" uuid="64a8f306-424f-4fe1-85f1-cbabba24fb5f"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{daily_revenue_countycitytax}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="238" y="4" width="55" height="23" uuid="6a07b513-66df-486c-aa76-4683b52ed8df"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{daily_revenue_statetax}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="289" y="4" width="61" height="20" uuid="42dd22c1-b3b9-4903-9897-7ef866e8a688"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{daily_revenue_taxexempt}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="350" y="4" width="56" height="20" uuid="c1c99344-e7ff-45f8-9323-90ece16128d5"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{daily_revenue_cashcheck}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="406" y="4" width="57" height="20" uuid="ac646b7e-cc04-45a6-b330-0bd8da5436f8"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{daily_revenue_total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="463" y="4" width="55" height="20" uuid="715d3437-c602-404e-8ea0-d8043173e5d0"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{daily_revenue_amex}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="518" y="4" width="46" height="20" uuid="f1cc43d7-04bc-49da-97de-7b2cb9dfcd1c"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{daily_revenue_discovery}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="726" y="4" width="76" height="23" uuid="cd5bc8d2-02b9-4d7c-b18e-e1f17f2064b4"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{revenue_detail_total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="659" y="4" width="67" height="24" uuid="71031d5e-c6da-4075-8d15-f1118c014610"/>
+				<textFieldExpression><![CDATA[$F{revenue_type_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="42" y="4" width="74" height="23" uuid="450de9d9-9169-49e1-b480-8e638307bcf8"/>
+				<textFieldExpression><![CDATA[$F{hotel_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="117" y="4" width="45" height="20" uuid="6c06bcc8-acb9-4b7f-91e5-1dd4cb65112b"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{daily_revenue_taxabletotal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="617" y="4" width="42" height="23" uuid="e284df6b-ce37-4f63-91d6-70ec9da8b96c"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{daily_revenue_visa}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="336" y="14" width="80" height="20" uuid="edd623c7-8c64-42da-874a-b35d6ee772a4"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="416" y="14" width="40" height="20" uuid="9eda0ba7-30b3-4d9e-86a6-10094fd03052"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<textField>
+				<reportElement x="726" y="0" width="76" height="20" uuid="d294bf2c-8129-485d-a51a-f9aa86994cf3"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{revenue_detail_total}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="659" y="0" width="67" height="20" uuid="dfe3712d-d5af-4e30-994a-13a48af53091"/>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

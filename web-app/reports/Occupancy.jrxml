@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Occupancy" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f8349162-41a9-4e96-9dd3-cdffec8681b7">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="75"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="Month" class="java.lang.String"/>
+	<parameter name="Year" class="java.lang.String"/>
+	<parameter name="User" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     daily_occupancy.`cancelationsfortodayarrival` AS daily_occupancy_cancelationsfortodayarrival,
+     daily_occupancy.`checkedouttoday` AS daily_occupancy_checkedouttoday,
+     daily_occupancy.`dateentered` AS daily_occupancy_dateentered,
+     daily_occupancy.`day` AS daily_occupancy_day,
+     daily_occupancy.`enteruser_id` AS daily_occupancy_enteruser_id,
+     daily_occupancy.`hotel_id` AS daily_occupancy_hotel_id,
+     daily_occupancy.`noshows` AS daily_occupancy_noshows,
+     daily_occupancy.`totalnonrevenuerooms` AS daily_occupancy_totalnonrevenuerooms,
+     daily_occupancy.`totalnoofadults` AS daily_occupancy_totalnoofadults,
+     daily_occupancy.`totalnoofchildren` AS daily_occupancy_totalnoofchildren,
+     daily_occupancy.`totaloccupiedrooms` AS daily_occupancy_totaloccupiedrooms,
+     daily_occupancy.`totalrevenuerooms` AS daily_occupancy_totalrevenuerooms,
+     daily_occupancy.`walkins` AS daily_occupancy_walkins,
+     daily_occupancy.`withreservation` AS daily_occupancy_withreservation,
+     hotel.`id` AS hotel_id,
+     hotel.`address1` AS hotel_address1,
+     hotel.`address2` AS hotel_address2,
+     hotel.`city` AS hotel_city,
+     hotel.`country` AS hotel_country,
+     hotel.`name` AS hotel_name,
+     hotel.`phonenumber` AS hotel_phonenumber,
+     hotel.`state` AS hotel_state,
+     hotel.`totalrooms` AS hotel_totalrooms,
+     hotel.`zip` AS hotel_zip,
+     hotel.`countycitytaxrate` AS hotel_countycitytaxrate,
+     hotel.`lastyearrooms` AS hotel_lastyearrooms,
+     hotel.`propertycode` AS hotel_propertycode,
+     hotel.`statetaxrate` AS hotel_statetaxrate,
+     shiro_user_hotels.`shiro_user_id` AS shiro_user_hotels_shiro_user_id,
+     shiro_user_hotels.`hotel_id` AS shiro_user_hotels_hotel_id,
+     shiro_user.`id` AS shiro_user_id
+FROM
+     `hotel` hotel INNER JOIN `daily_occupancy` daily_occupancy ON hotel.`id` = daily_occupancy.`hotel_id`
+     INNER JOIN `shiro_user_hotels` shiro_user_hotels ON hotel.`id` = shiro_user_hotels.`hotel_id`
+     INNER JOIN `shiro_user` shiro_user ON shiro_user_hotels.`shiro_user_id` = shiro_user.`id`
+WHERE
+     MONTH(daily_occupancy.day) = $P{Month}
+ AND YEAR(daily_occupancy.day) = $P{Year}
+ AND shiro_user.username = $P{User}
+ORDER BY
+     daily_occupancy.`day` DESC]]>
+	</queryString>
+	<field name="daily_occupancy_cancelationsfortodayarrival" class="java.lang.Integer"/>
+	<field name="daily_occupancy_checkedouttoday" class="java.lang.Integer"/>
+	<field name="daily_occupancy_dateentered" class="java.sql.Timestamp"/>
+	<field name="daily_occupancy_day" class="java.sql.Timestamp"/>
+	<field name="daily_occupancy_enteruser_id" class="java.lang.Long"/>
+	<field name="daily_occupancy_hotel_id" class="java.lang.Long"/>
+	<field name="daily_occupancy_noshows" class="java.lang.Integer"/>
+	<field name="daily_occupancy_totalnonrevenuerooms" class="java.lang.Integer"/>
+	<field name="daily_occupancy_totalnoofadults" class="java.lang.Integer"/>
+	<field name="daily_occupancy_totalnoofchildren" class="java.lang.Integer"/>
+	<field name="daily_occupancy_totaloccupiedrooms" class="java.lang.Integer"/>
+	<field name="daily_occupancy_totalrevenuerooms" class="java.lang.Integer"/>
+	<field name="daily_occupancy_walkins" class="java.lang.Integer"/>
+	<field name="daily_occupancy_withreservation" class="java.lang.Integer"/>
+	<field name="hotel_id" class="java.lang.Long"/>
+	<field name="hotel_address1" class="java.lang.String"/>
+	<field name="hotel_address2" class="java.lang.String"/>
+	<field name="hotel_city" class="java.lang.String"/>
+	<field name="hotel_country" class="java.lang.String"/>
+	<field name="hotel_name" class="java.lang.String"/>
+	<field name="hotel_phonenumber" class="java.lang.String"/>
+	<field name="hotel_state" class="java.lang.String"/>
+	<field name="hotel_totalrooms" class="java.lang.Integer"/>
+	<field name="hotel_zip" class="java.lang.String"/>
+	<field name="hotel_countycitytaxrate" class="java.lang.Float"/>
+	<field name="hotel_lastyearrooms" class="java.lang.Integer"/>
+	<field name="hotel_propertycode" class="java.lang.String"/>
+	<field name="hotel_statetaxrate" class="java.lang.Float"/>
+	<field name="shiro_user_hotels_shiro_user_id" class="java.lang.Long"/>
+	<field name="shiro_user_hotels_hotel_id" class="java.lang.Long"/>
+	<field name="shiro_user_id" class="java.lang.Long"/>
+	<variable name="daily_occupancy_totalrevenuerooms_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{daily_occupancy_totalrevenuerooms}]]></variableExpression>
+	</variable>
+	<variable name="daily_occupancy_totaloccupiedrooms_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{daily_occupancy_totaloccupiedrooms}]]></variableExpression>
+	</variable>
+	<variable name="daily_occupancy_withreservation_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{daily_occupancy_withreservation}]]></variableExpression>
+	</variable>
+	<variable name="daily_occupancy_walkins_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{daily_occupancy_walkins}]]></variableExpression>
+	</variable>
+	<variable name="daily_occupancy_totalnoofadults_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{daily_occupancy_totalnoofadults}]]></variableExpression>
+	</variable>
+	<variable name="daily_occupancy_totalnoofchildren_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{daily_occupancy_totalnoofchildren}]]></variableExpression>
+	</variable>
+	<variable name="daily_occupancy_checkedouttoday_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{daily_occupancy_checkedouttoday}]]></variableExpression>
+	</variable>
+	<variable name="daily_occupancy_totalnonrevenuerooms_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{daily_occupancy_totalnonrevenuerooms}]]></variableExpression>
+	</variable>
+	<variable name="daily_occupancy_cancelationsfortodayarrival_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{daily_occupancy_cancelationsfortodayarrival}]]></variableExpression>
+	</variable>
+	<variable name="daily_occupancy_noshows_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{daily_occupancy_noshows}]]></variableExpression>
+	</variable>
+	<group name="daily_occupancy_day">
+		<groupExpression><![CDATA[$F{daily_occupancy_day}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="301" y="22" width="151" height="26" uuid="acabb33a-1068-4dcf-b99f-32aeea5b15ff"/>
+				<textElement textAlignment="Right">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[Occupancy Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="41" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement x="635" y="7" width="71" height="20" uuid="33600668-6783-46a1-93bb-ed6a87cc0183"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Cancelations]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="472" y="7" width="65" height="20" uuid="be11ee7f-66cd-44f3-8af3-73a03d9d99d3"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Checked Out]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="62" y="7" width="41" height="20" uuid="ade83f4d-788e-41a7-be34-e13a840f2410"/>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="704" y="7" width="48" height="20" uuid="7c9ed221-c81f-4fb8-b8f7-eeef3d81a540"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[No Shows]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="535" y="7" width="102" height="20" uuid="2e6e46c3-6441-402b-b52d-5af424360a0c"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Non Revenue Rooms]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="388" y="7" width="43" height="20" uuid="67da863f-8738-4220-956a-e5d425d8a4e8"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Adults]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="429" y="7" width="43" height="20" uuid="bc4ca5cc-c720-4b8b-ada3-819c1f1486da"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Children]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="190" y="7" width="80" height="20" uuid="3651a678-d7d3-4203-bad5-07e5a463b0de"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Revenue Rooms]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="352" y="7" width="36" height="20" uuid="5c30ce0e-9b03-4375-8d25-77b74b628869"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Walkins]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="270" y="7" width="82" height="20" uuid="5901ae8f-e8a7-41a6-8d23-dd0e5720bf4d"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[With Reservation]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="7" width="62" height="20" uuid="2d012cdb-79d1-452a-a1c5-9faef6718b77"/>
+				<text><![CDATA[Hotel]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="103" y="7" width="87" height="20" uuid="9bee03d5-c1be-459b-bba2-88d5e9736ec3"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Occupied Rooms]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="28" width="752" height="1" uuid="c40a82d2-d25f-4a6a-a71c-3f9769b4492d"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<textField>
+				<reportElement mode="Transparent" x="0" y="0" width="62" height="20" uuid="2e09fc37-cdbd-415d-aa44-71ba861a5795"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hotel_name}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="20" width="750" height="1" uuid="c544a476-da0f-43b3-b20e-d2c64aff2bd3"/>
+			</line>
+			<textField>
+				<reportElement x="633" y="1" width="71" height="20" uuid="4b111e23-0191-497b-8506-8732ef42635f"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{daily_occupancy_cancelationsfortodayarrival}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="470" y="1" width="65" height="20" uuid="a1aec79d-a529-4b34-a846-25b94918490d"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{daily_occupancy_checkedouttoday}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yy">
+				<reportElement x="60" y="0" width="41" height="20" uuid="d04f1202-aef1-4c96-8a6a-3b265896ae4f"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{daily_occupancy_day}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="702" y="1" width="48" height="20" uuid="9eab7015-1448-4877-8357-b949b6de3868"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{daily_occupancy_noshows}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="533" y="1" width="102" height="20" uuid="122c3070-1c06-4c1a-9745-c806fca926f9"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{daily_occupancy_totalnonrevenuerooms}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="386" y="1" width="43" height="20" uuid="b5c0938d-3e33-434c-8851-53d9284f95b7"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{daily_occupancy_totalnoofadults}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="427" y="1" width="43" height="20" uuid="1b95237d-9266-46d4-b782-b8ef1675a798"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{daily_occupancy_totalnoofchildren}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="101" y="0" width="87" height="20" uuid="08186fac-6ae5-4f5e-9242-0491e1f827ea"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{daily_occupancy_totaloccupiedrooms}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="188" y="0" width="80" height="20" uuid="d0e80c20-84a2-44b8-bc43-23e28325a23d"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{daily_occupancy_totalrevenuerooms}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="268" y="1" width="82" height="20" uuid="3913b9c5-d158-4448-b1ce-a244daa56e0d"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{daily_occupancy_withreservation}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="350" y="1" width="36" height="20" uuid="8c18d3e3-4767-4a29-8069-14948f40ebf3"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{daily_occupancy_walkins}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="60" splitType="Stretch">
+			<textField>
+				<reportElement x="338" y="19" width="80" height="20" uuid="d675d9b4-a82c-44f6-8730-41c0fae07a71"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="418" y="19" width="40" height="20" uuid="684023d4-8ea0-48d8-855b-7b334db08fe0"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="56" splitType="Stretch">
+			<textField>
+				<reportElement x="188" y="0" width="80" height="20" uuid="f16b87a9-fca2-49f6-99f2-04004e1bfb50"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{daily_occupancy_totalrevenuerooms_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="101" y="0" width="87" height="20" uuid="c1b43f4c-90dc-4cd5-af1e-be998d070ce4"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{daily_occupancy_totaloccupiedrooms_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="268" y="0" width="82" height="20" uuid="d5ce0f36-a0d0-4e88-8cca-f5bc6952b381"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{daily_occupancy_withreservation_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="352" y="0" width="34" height="20" uuid="81224ce4-e5fc-498f-b3c4-2b2222b9250c"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{daily_occupancy_walkins_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="386" y="0" width="43" height="20" uuid="6e7ed808-cc5e-4a91-abbc-e4586e14b493"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{daily_occupancy_totalnoofadults_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="429" y="0" width="41" height="20" uuid="63c551cf-1fa9-4b2a-aa87-8ed25409b7a4"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{daily_occupancy_totalnoofchildren_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="470" y="0" width="65" height="20" uuid="584d2238-88b8-45d1-bd55-98ac041b5833"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{daily_occupancy_checkedouttoday_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="535" y="0" width="98" height="20" uuid="1255aa8a-9e6e-4bc7-99c2-433b738f4598"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{daily_occupancy_totalnonrevenuerooms_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="633" y="0" width="71" height="20" uuid="a99ec696-561b-4e97-9b90-9112bdf18d9f"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{daily_occupancy_cancelationsfortodayarrival_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="704" y="0" width="46" height="20" uuid="f70751df-383a-4978-bb78-3df97ff91457"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{daily_occupancy_noshows_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-2" y="0" width="103" height="20" uuid="dafc5a0f-a473-4b3e-8eba-fd2fe764b2b0"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Total: ]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

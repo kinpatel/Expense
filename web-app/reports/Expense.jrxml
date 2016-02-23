@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Expense" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6a288ab7-5f70-4151-8d30-b1414b29d6be">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="522"/>
+	<property name="ireport.y" value="470"/>
+	<parameter name="Month" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Year" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="HotelId" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     sum(expense_detail.`amount`) AS expense_detail_amount,
+     sum(expense_detail.`quantity`) AS expense_detail_quantity,
+     expense_detail.`description` AS expense_detail_description,
+     expense_category.`name` AS expense_category_name,
+     expense_invoice.`invoicedate` AS expense_invoice_invoicedate,
+     expense_type.`name` AS expense_type_name,
+     vendor.`name` AS vendor_name,
+     hotel.`name` AS hotel_name,
+     hotel.`address1` AS hotel_address1,
+     hotel.`address2` AS hotel_address2,
+     hotel.`city` AS hotel_city,
+     hotel.`country` AS hotel_country,
+     hotel.`phonenumber` AS hotel_phonenumber,
+     hotel.`state` AS hotel_state,
+     hotel.`zip` AS hotel_zip,
+     payment_type.`name` AS payment_type_name
+FROM
+     `expense_invoice` expense_invoice LEFT OUTER JOIN `expense_detail` expense_detail ON expense_invoice.`id` = expense_detail.`invoice_id`
+     LEFT OUTER JOIN `expense_type` expense_type ON expense_detail.`expensetype_id` = expense_type.`id`
+     INNER JOIN `expense_category` expense_category ON expense_type.`expensecategory_id` = expense_category.`id`
+     INNER JOIN `hotel` hotel ON expense_type.`hotel_id` = hotel.`id`
+     AND hotel.`id` = expense_invoice.`hotel_id`
+     INNER JOIN `vendor` vendor ON expense_invoice.`vendor_id` = vendor.`id`
+     INNER JOIN `payment_type` payment_type ON payment_type.`id` = expense_invoice.`paymenttype_id`
+WHERE
+     MONTH(expense_invoice.invoicedate) = $P{Month}
+ AND YEAR(expense_invoice.invoicedate) = $P{Year}
+ AND hotel.id = $P{HotelId}
+GROUP BY
+     expense_category.`name`,
+     expense_invoice.`invoicedate`,
+     expense_type.`name`,
+     vendor.`name`,
+     hotel.`name`,
+     hotel.`address1`,
+     hotel.`address2`,
+     hotel.`city`,
+     hotel.`country`,
+     hotel.`phonenumber`,
+     hotel.`state`,
+     hotel.`zip`,
+     payment_type.`name`,
+     expense_detail.`description`
+ORDER BY
+     expense_category.`name`,
+     expense_invoice.`invoicedate`,
+     expense_type.`name`]]>
+	</queryString>
+	<field name="expense_detail_amount" class="java.lang.Double"/>
+	<field name="expense_detail_quantity" class="java.math.BigDecimal"/>
+	<field name="expense_detail_description" class="java.lang.String"/>
+	<field name="expense_category_name" class="java.lang.String"/>
+	<field name="expense_invoice_invoicedate" class="java.sql.Timestamp"/>
+	<field name="expense_type_name" class="java.lang.String"/>
+	<field name="vendor_name" class="java.lang.String"/>
+	<field name="hotel_name" class="java.lang.String"/>
+	<field name="hotel_address1" class="java.lang.String"/>
+	<field name="hotel_address2" class="java.lang.String"/>
+	<field name="hotel_city" class="java.lang.String"/>
+	<field name="hotel_country" class="java.lang.String"/>
+	<field name="hotel_phonenumber" class="java.lang.String"/>
+	<field name="hotel_state" class="java.lang.String"/>
+	<field name="hotel_zip" class="java.lang.String"/>
+	<field name="payment_type_name" class="java.lang.String"/>
+	<variable name="expense_detail_amount_1" class="java.lang.Double" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{expense_detail_amount}]]></variableExpression>
+	</variable>
+	<variable name="SubTotalCategory" class="java.lang.Double" resetType="Group" resetGroup="expense_category_name" calculation="Sum">
+		<variableExpression><![CDATA[$F{expense_detail_amount}]]></variableExpression>
+	</variable>
+	<group name="hotel_name">
+		<groupExpression><![CDATA[$F{hotel_name}]]></groupExpression>
+	</group>
+	<group name="expense_category_name">
+		<groupExpression><![CDATA[$F{expense_category_name}]]></groupExpression>
+		<groupFooter>
+			<band height="50">
+				<textField>
+					<reportElement x="1" y="10" width="201" height="20" uuid="e03715a5-7c8e-46e9-ba6e-ad6e176d99ca"/>
+					<textElement>
+						<font isUnderline="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{expense_category_name} + " Total:"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="414" y="10" width="58" height="20" uuid="424aa376-a6a1-48c4-91cb-df1e05623d83"/>
+					<textElement textAlignment="Right">
+						<font isUnderline="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{SubTotalCategory}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="1" y="2" width="570" height="1" uuid="c5904826-56b6-442b-8066-5ce7cb45f9d8"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="expense_detail_description">
+		<groupExpression><![CDATA[]]></groupExpression>
+	</group>
+	<group name="vendor_name">
+		<groupExpression><![CDATA[$F{vendor_name}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField>
+				<reportElement x="10" y="50" width="131" height="20" uuid="9c5eba0b-725d-49bc-9dd0-9dae579053b1"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hotel_phonenumber}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="10" width="145" height="20" uuid="dee44fe7-8902-4c50-85ff-cf510148b468"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hotel_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="399" y="40" width="138" height="20" uuid="68d8f445-053b-4541-99ef-8c34d81d25b1"/>
+				<textFieldExpression><![CDATA[$P{Month}+"/"+$P{Year}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="30" width="334" height="20" uuid="29ed49b4-476a-4525-9d36-849a010ffbb2"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hotel_address1}+", "+$F{hotel_city}+", "+$F{hotel_state}+" "+$F{hotel_zip}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="344" y="40" width="44" height="20" uuid="afdd46b5-895c-4819-abdf-0ec8978a0946"/>
+				<textElement>
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Period:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="344" y="10" width="193" height="20" uuid="3358a90b-49d3-4f1e-b022-d970909685e5"/>
+				<textElement>
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Detail Expense Report]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="72" width="570" height="1" uuid="8996f332-b3ec-44fe-a4cc-7c7da673b87d"/>
+			</line>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement x="384" y="3" width="41" height="20" uuid="24eefe17-e0a0-4ca8-acef-866f0ae5da99"/>
+				<textElement textAlignment="Right">
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Quantity]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="425" y="3" width="47" height="20" uuid="1c9ccddd-d764-495e-b5b5-f8856b7d1dd9"/>
+				<textElement textAlignment="Right">
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="259" y="3" width="52" height="20" uuid="c01d4308-18fd-48cc-8551-95a2284849f8"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="202" y="3" width="57" height="20" uuid="5d092952-3491-4181-856b-a9015883ffd0"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Vendor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="112" y="3" width="90" height="20" uuid="4a46a9ae-4199-4e22-9082-44a1876e30af"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Expense Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="311" y="3" width="73" height="20" uuid="7ba2786c-7a2d-4d0e-841f-b71492d52adf"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Payment Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="484" y="3" width="87" height="20" uuid="15d1ec9b-9ace-44a0-889b-8f43b4c2fb73"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="425" y="0" width="47" height="20" uuid="79c81f8f-c9ff-4c4b-8bfd-e55a790a1fcb"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{expense_detail_amount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yy" isBlankWhenNull="true">
+				<reportElement x="259" y="0" width="52" height="20" uuid="6a366cab-4644-40b5-8d1f-4bd909b157ca"/>
+				<textFieldExpression><![CDATA[$F{expense_invoice_invoicedate}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="384" y="1" width="41" height="19" uuid="ecf053f0-a627-4df2-9393-ea1f7d4b8952"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{expense_detail_quantity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="202" y="0" width="57" height="20" uuid="eb1a0c40-17f7-4fe8-98fa-7cc537a1f2c6"/>
+				<textFieldExpression><![CDATA[$F{vendor_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="1" width="100" height="20" uuid="45b564dc-554b-4ec5-a44b-09279e24c7fb"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{expense_category_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="112" y="0" width="90" height="20" uuid="5beabbdc-3c23-40ef-aeef-dde508e7070f"/>
+				<textFieldExpression><![CDATA[$F{expense_type_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="311" y="0" width="73" height="20" uuid="3032905c-c6f0-4a6a-8972-f96e0efe74eb"/>
+				<textFieldExpression><![CDATA[$F{payment_type_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="484" y="0" width="87" height="20" uuid="1ffe1555-cd3a-4200-8e5c-a5384e489f67"/>
+				<textFieldExpression><![CDATA[$F{expense_detail_description}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="228" y="16" width="80" height="20" uuid="244f5eed-035f-407d-9725-1d6639395461"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="308" y="16" width="40" height="20" uuid="d0ab2882-2270-4e7f-8a34-d67b2ae5be61"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="6" width="570" height="1" uuid="0e85d763-9697-45ad-858a-537c53e18b01"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="372" y="5" width="100" height="20" uuid="07b5e674-4a31-45ac-9a42-13a6a53fee3a"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{expense_detail_amount_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="308" y="5" width="58" height="20" uuid="97dd036a-bc3c-4f1a-a49f-ea04bf887c56"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="311" y="4" width="161" height="1" uuid="71e3282d-6015-4375-901f-dd0def84cc27"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

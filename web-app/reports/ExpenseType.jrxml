@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Expense" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6a288ab7-5f70-4151-8d30-b1414b29d6be">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="287"/>
+	<property name="ireport.y" value="278"/>
+	<parameter name="Month" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Year" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="HotelId" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     sum(expense_detail.`amount`) AS expense_detail_amount,
+     hotel.`name` AS hotel_name,
+     hotel.`address1` AS hotel_address1,
+     hotel.`address2` AS hotel_address2,
+     hotel.`city` AS hotel_city,
+     hotel.`country` AS hotel_country,
+     hotel.`phonenumber` AS hotel_phonenumber,
+     hotel.`state` AS hotel_state,
+     hotel.`zip` AS hotel_zip,
+     expense_type.`name` AS expense_type_name
+FROM
+     `hotel` hotel INNER JOIN `expense_invoice` expense_invoice ON hotel.`id` = expense_invoice.`hotel_id`
+     INNER JOIN `expense_type` expense_type ON hotel.`id` = expense_type.`hotel_id`
+     INNER JOIN `expense_category` expense_category ON expense_type.`expensecategory_id` = expense_category.`id`
+     INNER JOIN `expense_detail` expense_detail ON expense_type.`id` = expense_detail.`expensetype_id`
+     AND expense_invoice.`id` = expense_detail.`invoice_id`
+WHERE
+     MONTH(expense_invoice.invoicedate) = $P{Month}
+ AND YEAR(expense_invoice.invoicedate) = $P{Year}
+ AND hotel.id = $P{HotelId}
+GROUP BY
+     hotel.`name`,
+     hotel.`address1`,
+     hotel.`address2`,
+     hotel.`city`,
+     hotel.`country`,
+     hotel.`phonenumber`,
+     hotel.`state`,
+     hotel.`zip`,
+     expense_category.`name`
+ORDER BY
+     expense_category.`name` ASC]]>
+	</queryString>
+	<field name="expense_detail_amount" class="java.lang.Double"/>
+	<field name="hotel_name" class="java.lang.String"/>
+	<field name="hotel_address1" class="java.lang.String"/>
+	<field name="hotel_address2" class="java.lang.String"/>
+	<field name="hotel_city" class="java.lang.String"/>
+	<field name="hotel_country" class="java.lang.String"/>
+	<field name="hotel_phonenumber" class="java.lang.String"/>
+	<field name="hotel_state" class="java.lang.String"/>
+	<field name="hotel_zip" class="java.lang.String"/>
+	<field name="expense_type_name" class="java.lang.String"/>
+	<variable name="expense_detail_amount_1" class="java.lang.Double" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{expense_detail_amount}]]></variableExpression>
+	</variable>
+	<group name="hotel_name">
+		<groupExpression><![CDATA[$F{hotel_name}]]></groupExpression>
+	</group>
+	<group name="expense_category_name">
+		<groupExpression><![CDATA[]]></groupExpression>
+	</group>
+	<group name="expense_detail_description">
+		<groupExpression><![CDATA[]]></groupExpression>
+	</group>
+	<group name="vendor_name">
+		<groupExpression><![CDATA[]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField>
+				<reportElement x="10" y="50" width="131" height="20" uuid="9c5eba0b-725d-49bc-9dd0-9dae579053b1"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hotel_phonenumber}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="10" width="145" height="20" uuid="dee44fe7-8902-4c50-85ff-cf510148b468"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hotel_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="399" y="40" width="138" height="20" uuid="68d8f445-053b-4541-99ef-8c34d81d25b1"/>
+				<textFieldExpression><![CDATA[$P{Month}+"/"+$P{Year}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="30" width="334" height="20" uuid="29ed49b4-476a-4525-9d36-849a010ffbb2"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hotel_address1}+", "+$F{hotel_city}+", "+$F{hotel_state}+" "+$F{hotel_zip}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="344" y="40" width="44" height="20" uuid="afdd46b5-895c-4819-abdf-0ec8978a0946"/>
+				<textElement>
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Period:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="344" y="10" width="193" height="20" uuid="3358a90b-49d3-4f1e-b022-d970909685e5"/>
+				<textElement>
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Expense Type Summary]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="72" width="570" height="1" uuid="8996f332-b3ec-44fe-a4cc-7c7da673b87d"/>
+			</line>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement x="286" y="3" width="62" height="20" uuid="1c9ccddd-d764-495e-b5b5-f8856b7d1dd9"/>
+				<textElement textAlignment="Right">
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="186" y="3" width="100" height="20" uuid="6231439c-5530-40b5-9d37-651db1f30b01"/>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Expense Type]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="286" y="0" width="62" height="20" uuid="79c81f8f-c9ff-4c4b-8bfd-e55a790a1fcb"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{expense_detail_amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="186" y="0" width="100" height="20" uuid="68130c08-5423-436b-bdf2-7d54b75f486c"/>
+				<textFieldExpression><![CDATA[$F{expense_type_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="36" splitType="Stretch">
+			<textField>
+				<reportElement x="228" y="16" width="80" height="20" uuid="244f5eed-035f-407d-9725-1d6639395461"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="308" y="16" width="40" height="20" uuid="d0ab2882-2270-4e7f-8a34-d67b2ae5be61"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="6" width="570" height="1" uuid="0e85d763-9697-45ad-858a-537c53e18b01"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="244" y="2" width="104" height="20" uuid="07b5e674-4a31-45ac-9a42-13a6a53fee3a"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{expense_detail_amount_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="186" y="2" width="58" height="20" uuid="97dd036a-bc3c-4f1a-a49f-ea04bf887c56"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="186" y="0" width="162" height="2" uuid="71e3282d-6015-4375-901f-dd0def84cc27"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

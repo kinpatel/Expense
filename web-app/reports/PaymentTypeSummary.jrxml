@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PaymentTypeSummary" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="86e1ee91-9fe2-4f02-8491-ac6ea93cdc1f">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="82"/>
+	<parameter name="Month" class="java.lang.String"/>
+	<parameter name="Year" class="java.lang.String"/>
+	<parameter name="HotelId" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     sum(expense_invoice.`total`) AS payment_type_amount,
+     payment_type.`name` AS payment_type_name,
+     hotel.`address1` AS hotel_address1,
+     hotel.`address2` AS hotel_address2,
+     hotel.`city` AS hotel_city,
+     hotel.`country` AS hotel_country,
+     hotel.`name` AS hotel_name,
+     hotel.`phonenumber` AS hotel_phonenumber,
+     hotel.`state` AS hotel_state,
+     hotel.`zip` AS hotel_zip
+FROM
+     `payment_type` payment_type INNER JOIN `expense_invoice` expense_invoice ON payment_type.`id` = expense_invoice.`paymenttype_id`
+     INNER JOIN `hotel` hotel ON expense_invoice.`hotel_id` = hotel.`id`
+WHERE
+     MONTH(expense_invoice.`invoicedate`) = $P{Month}
+ AND YEAR(expense_invoice.`invoicedate`) = $P{Year}
+ AND hotel.`id` = $P{HotelId}
+GROUP BY
+     payment_type.`name`,
+     hotel.`address1`,
+     hotel.`address2`,
+     hotel.`city`,
+     hotel.`country`,
+     hotel.`name`,
+     hotel.`phonenumber`,
+     hotel.`state`,
+     hotel.`zip`]]>
+	</queryString>
+	<field name="payment_type_amount" class="java.lang.Double"/>
+	<field name="payment_type_name" class="java.lang.String"/>
+	<field name="hotel_address1" class="java.lang.String"/>
+	<field name="hotel_address2" class="java.lang.String"/>
+	<field name="hotel_city" class="java.lang.String"/>
+	<field name="hotel_country" class="java.lang.String"/>
+	<field name="hotel_name" class="java.lang.String"/>
+	<field name="hotel_phonenumber" class="java.lang.String"/>
+	<field name="hotel_state" class="java.lang.String"/>
+	<field name="hotel_zip" class="java.lang.String"/>
+	<variable name="payment_type_amount_1" class="java.lang.Double" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{payment_type_amount}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="64" splitType="Stretch">
+			<staticText>
+				<reportElement x="357" y="0" width="193" height="20" uuid="7d7371f9-a1df-45a3-b9fb-e61231cdb685"/>
+				<textElement>
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Payment Type Summary]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="23" y="0" width="145" height="20" uuid="652135a0-481d-4d4f-9564-fbb188c380b3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hotel_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="23" y="20" width="334" height="20" uuid="f98713f3-0b4c-47f7-ad27-d732869003d3"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hotel_address1}+", "+$F{hotel_city}+", "+$F{hotel_state}+" "+$F{hotel_zip}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="23" y="40" width="131" height="20" uuid="074f5e09-21c6-463d-a749-8523ec70b352"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hotel_phonenumber}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="357" y="30" width="44" height="20" uuid="cda5b717-e181-4dc0-a1e1-787b6d65eb4c"/>
+				<textElement>
+					<font isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Period:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="412" y="30" width="138" height="20" uuid="0ccddc84-1f8e-4e20-aa89-4dda7c52c6eb"/>
+				<textFieldExpression><![CDATA[$P{Month}+"/"+$P{Year}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<line>
+				<reportElement x="1" y="-2" width="570" height="1" uuid="25e41299-640f-4efa-a82c-327f151c5305"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="28" splitType="Stretch">
+			<staticText>
+				<reportElement x="168" y="3" width="100" height="20" uuid="f681efff-2431-4cda-9ca4-22437ce38824"/>
+				<textElement>
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Payment Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="357" y="3" width="84" height="20" uuid="8f2e2ac9-6838-478d-ab02-b207bd5c9d05"/>
+				<textElement>
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="37" splitType="Stretch">
+			<textField>
+				<reportElement x="168" y="0" width="100" height="20" uuid="659a78c4-6240-4b6e-bb2d-b26b93b45d3d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{payment_type_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="357" y="0" width="84" height="20" uuid="395565e5-9c31-475b-9077-fbea836b81c9"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{payment_type_amount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="247" splitType="Stretch">
+			<staticText>
+				<reportElement x="168" y="1" width="100" height="20" uuid="8a15be63-9874-45d7-8b4f-58c3e3821064"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="357" y="1" width="84" height="20" uuid="99feb10d-c91e-4761-94a0-c8a23575110b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{payment_type_amount_1}]]></textFieldExpression>
+			</textField>
+			<pieChart>
+				<chart>
+					<reportElement x="0" y="67" width="571" height="180" uuid="2df4d571-1e56-4a00-a90f-508fcee46c29"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend position="Top"/>
+				</chart>
+				<pieDataset>
+					<keyExpression><![CDATA[$F{payment_type_name}]]></keyExpression>
+					<valueExpression><![CDATA[$F{payment_type_amount}]]></valueExpression>
+				</pieDataset>
+				<piePlot isShowLabels="true" labelFormat="{0}" legendLabelFormat="{0} ({2})">
+					<plot/>
+					<itemLabel/>
+				</piePlot>
+			</pieChart>
+			<line>
+				<reportElement x="168" y="0" width="273" height="1" uuid="0f5e8098-e5e9-43ec-b8b2-22e22d3f4822"/>
+			</line>
+			<staticText>
+				<reportElement x="233" y="36" width="168" height="20" uuid="22cbf3c8-9182-4d7d-9dc4-e2e97e9b627c"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Amount / Payment Type]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>
